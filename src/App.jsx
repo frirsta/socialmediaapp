@@ -1,15 +1,12 @@
-
-import './App.css'
+import "./App.css";
+import NavBar from "./components/navbar/Navbar";
+import { AuthContext } from "./context/Context";
+import React, { useContext } from "react";
 
 function App() {
-
-  return (
-    <h1 class="text-3xl font-bold">
-    Hello world!
-  </h1>
-
-  
-  )
+  const { user, userData } = useContext(AuthContext);
+  console.log(user, userData);
+  return <div>{user && userData && <NavBar />}</div>;
 }
 
-export default App
+export default App;

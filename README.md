@@ -14,3 +14,5 @@
 <a href="https://www.freepik.com/icon/up-chevron_9923683#fromView=resource_detail&position=1">Icon by Icon Mart</a>
 
 <a href="https://www.freepik.com/icon/up-chevron_9923683#fromView=resource_detail&position=1">Icon by Icon Mart</a>
+
+<a href="https://www.freepik.com/icon/user_3421697#fromView=search&page=1&position=70&uuid=ae730bd0-7603-4eb8-88e6-5360cfb420a9">Icon by rukanicon</a>

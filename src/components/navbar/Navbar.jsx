@@ -1,25 +1,30 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   Card,
   Typography,
   List,
   ListItem,
   ListItemPrefix,
-  ListItemSuffix,
-  Chip,
   Accordion,
   AccordionHeader,
   AccordionBody,
 } from "@material-tailwind/react";
-import upchevron from '../../assets/icons/upchevron.png';
-import downchevron from '../../assets/icons/downchevron.png';
-import power from '../../assets/icons/power.png';
+import downchevron from "../../assets/icons/downchevron.png";
+import power from "../../assets/icons/power.png";
+import home from "../../assets/icons/home.png";
+import search from "../../assets/icons/search.png";
+import { AuthContext } from "../../context/Context";
+import UserAvatar from "../profile/UserAvatar";
+import { Link } from "react-router-dom";
 const NavBar = () => {
-  const [open, setOpen] = React.useState(0);
+  const { user, userData, signOutUser } = useContext(AuthContext);
+  const [open, setOpen] = useState(0);
 
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
   };
+
+  console.log(user, userData);
 
   return (
     <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
@@ -29,13 +34,28 @@ const NavBar = () => {
         </Typography>
       </div>
       <List>
+        <ListItem>
+          <ListItemPrefix>
+            <img src={home} className="h-5 w-5" />
+          </ListItemPrefix>
+          Home
+        </ListItem>
+        <ListItem>
+          <ListItemPrefix>
+            <img src={search} className="h-5 w-5" />
+          </ListItemPrefix>
+          Search
+        </ListItem>
         <Accordion
           open={open === 1}
           icon={
-            <img src={downchevron} alt="down chevron" className={`mx-auto h-4 w-4 transition-transform ${
+            <img
+              src={downchevron}
+              alt="down chevron"
+              className={`mx-auto h-4 w-4 transition-transform ${
                 open === 1 ? "rotate-180" : ""
-              }`} />
-           
+              }`}
+            />
           }
         >
           <ListItem className="p-0" selected={open === 1}>
@@ -43,9 +63,6 @@ const NavBar = () => {
               onClick={() => handleOpen(1)}
               className="border-b-0 p-3"
             >
-              <ListItemPrefix>
-
-              </ListItemPrefix>
               <Typography color="blue-gray" className="mr-auto font-normal">
                 Dashboard
               </Typography>
@@ -53,33 +70,21 @@ const NavBar = () => {
           </ListItem>
           <AccordionBody className="py-1">
             <List className="p-0">
-              <ListItem>
-                <ListItemPrefix>
-                
-                </ListItemPrefix>
-                Analytics
-              </ListItem>
-              <ListItem>
-                <ListItemPrefix>
-                
-                </ListItemPrefix>
-                Reporting
-              </ListItem>
-              <ListItem>
-                <ListItemPrefix>
-                
-                </ListItemPrefix>
-                Projects
-              </ListItem>
+              <ListItem>Analytics</ListItem>
+              <ListItem>Reporting</ListItem>
+              <ListItem>Projects</ListItem>
             </List>
           </AccordionBody>
         </Accordion>
-
-
-
-
-
-        <ListItem>
+        <Link to={`profile/${userData?.uid}`}>
+          <ListItem>
+            <ListItemPrefix>
+              <UserAvatar image={user?.photoURL} width={30} height={30} />
+            </ListItemPrefix>
+            Profile
+          </ListItem>
+        </Link>
+        <ListItem onClick={signOutUser}>
           <ListItemPrefix>
             <img src={power} className="h-5 w-5" />
           </ListItemPrefix>
