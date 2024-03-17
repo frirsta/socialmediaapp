@@ -251,7 +251,7 @@ export function AddPost({ open, handleOpen, handleClose }) {
                       userData?.name?.charAt(0).toUpperCase() +
                         userData?.name?.slice(1)
                     }`}
-                    className="p-3 outline-none rounded-b-3xl capitalize text-left w-full bg-[#262626] text-[#e8e8e8] opacity-80"
+                    className="p-3 outline-none rounded-b-3xl  text-left w-full bg-[#262626] text-[#e8e8e8] opacity-80"
                     {...formik.getFieldProps("text")}
                     ref={text}
                   ></textarea>
