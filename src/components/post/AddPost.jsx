@@ -1,5 +1,4 @@
 import {
-  ButtonGroup,
   Button,
   Dialog,
   Card,
@@ -183,9 +182,9 @@ export function AddPost({ open, handleOpen, handleClose }) {
         handleClose={handleClose}
         className="bg-transparent shadow-none"
       >
-        <Card className="mx-auto max-w-[24rem] bg-opacity-0">
+        <Card className="mx-auto max-w-[24rem] bg-opacity-0 shadow-none">
           <CardBody className="rounded-b-3xl p-0 ">
-            <div className="flex justify-end items-center pr-3 pt-3">
+            <div className="absolute left-6 pr-3 pt-3">
               <button onClick={handleExit} className="text-gray-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -205,7 +204,7 @@ export function AddPost({ open, handleOpen, handleClose }) {
             </div>
 
             <form
-              className="min-h-96 rounded-3xl bg-white flex flex-col justify-start items-center"
+              className="min-h-96 rounded-3xl  flex flex-col justify-start items-center"
               onSubmit={handleSubmitPost}
             >
               <div className="absolute bottom-20 w-full flex justify-center items-center mb-3">
@@ -260,20 +259,20 @@ export function AddPost({ open, handleOpen, handleClose }) {
               )}
               {!file && (
                 <div className="bg-[#262626] rounded-3xl w-full min-h-96 py-3 px-6 flex flex-col">
-                  <span className="rounded-lg capitalize font-bold text-[#e8e8e8] text-base pb-3">
+                  <span className="rounded-lg capitalize text-center font-bold text-[#e8e8e8] text-base pb-3">
                     Create new post
                   </span>
                   <hr className="opacity-20" />
                   <label
                     htmlFor="addImage"
-                    className="cursor-pointer object-cover flex flex-col justify-evenly items-center min-h-96"
+                    className="cursor-pointer object-cover flex flex-col justify-center items-center min-h-96"
                   >
-                    <img src={photo_video} alt="Add image" className="" />
+                    <img src={photo_video} alt="Add image" className="mb-3" />
                     <Button
                       disabled
                       color="blue"
                       size="sm"
-                      className="text-sm capitalize px-10 py-1 disabled:opacity-1"
+                      className="text-sm capitalize px-6 py-1 mb-8 disabled:opacity-1"
                     >
                       Select from computer
                     </Button>
