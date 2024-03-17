@@ -1,4 +1,11 @@
-import { Button, Dialog, Card, CardBody } from "@material-tailwind/react";
+import {
+  ButtonGroup,
+  Button,
+  Dialog,
+  Card,
+  CardBody,
+  Alert,
+} from "@material-tailwind/react";
 import React, {
   useContext,
   useReducer,
@@ -12,6 +19,8 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 
 import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
@@ -19,7 +28,7 @@ import { Reducer, postActions, postState } from "../../context/Reducer";
 import { AuthContext } from "../../context/Context";
 import photo_video from "../../assets/icons/photo_video.png";
 
-export function AddPost({ open, handleOpen }) {
+export function AddPost({ open, handleOpen, handleClose }) {
   const { user, userData } = useContext(AuthContext);
   const text = useRef("");
   const [image, setImage] = useState(null);
@@ -31,15 +40,36 @@ export function AddPost({ open, handleOpen }) {
   const { HANDLE_ERROR } = postActions;
   const [progressBar, setProgressBar] = useState(0);
 
+  const [showExitConfirmation, setShowExitConfirmation] = useState(false);
+
   const handleOpenModal = () => {
     handleOpen();
     setProgressBar(0);
   };
 
+  const handleCloseModal = () => {
+    formik.resetForm(); // Reset the formik form
+    setShowExitConfirmation(false);
+    setFile(null);
+    setImage(null);
+    handleClose();
+  };
+
+  const handleExit = () => {
+    if (formik.values.text !== "" || file) {
+      setShowExitConfirmation(true);
+    } else {
+      handleCloseModal();
+    }
+  };
+
+  const handleReturn = () => {
+    setShowExitConfirmation(false);
+  };
+
   const handleUpload = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
-
 
     if (selectedFile) {
       const reader = new FileReader();
@@ -52,10 +82,10 @@ export function AddPost({ open, handleOpen }) {
 
   const handleSubmitPost = async (e) => {
     e.preventDefault();
-    if (text.current.value !== "") {
+    if (formik.values.text !== "") {
       try {
         if (file) {
-          await submitImage(); 
+          await submitImage();
         }
 
         await setDoc(postRef, {
@@ -64,18 +94,15 @@ export function AddPost({ open, handleOpen }) {
           logo: user?.photoURL,
           name: user?.displayName || userData?.name,
           email: user?.email || userData?.email,
-          text: text.current.value,
+          text: formik.values.text,
           image: image,
           timestamp: serverTimestamp(),
         });
 
-        text.current.value = "";
-        setFile(null);
-        setImage(null);
+        handleCloseModal();
       } catch (err) {
         dispatch({ type: HANDLE_ERROR });
         alert(err.message);
-        console.log(err.message);
       }
     } else {
       dispatch({ type: HANDLE_ERROR });
@@ -127,12 +154,25 @@ export function AddPost({ open, handleOpen }) {
       } catch (err) {
         dispatch({ type: HANDLE_ERROR });
         alert(err.message);
-        console.log(err.message);
       }
     }
   };
 
   useEffect(() => {}, [collectionRef]);
+
+  const initialValues = {
+    text: "",
+  };
+
+  const validationSchema = Yup.object({
+    text: Yup.string().required("Please provide a caption for your post"),
+  });
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    handleSubmitPost,
+  });
 
   return (
     <>
@@ -140,14 +180,48 @@ export function AddPost({ open, handleOpen }) {
         onClose={handleOpenModal}
         open={open}
         handler={handleOpen}
+        handleClose={handleClose}
         className="bg-transparent shadow-none"
       >
         <Card className="mx-auto max-w-[24rem] bg-opacity-0">
           <CardBody className="rounded-b-3xl p-0 ">
+            <div className="flex justify-end items-center pr-3 pt-3">
+              <button onClick={handleExit} className="text-gray-500">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
             <form
               className="min-h-96 rounded-3xl bg-white flex flex-col justify-start items-center"
               onSubmit={handleSubmitPost}
             >
+              <div className="absolute bottom-20 w-full flex justify-center items-center mb-3">
+                {formik.errors.text && (
+                  <Alert
+                    animate={{
+                      mount: { y: 0 },
+                      unmount: { y: 100 },
+                    }}
+                    color="amber"
+                    className="text-sm w-full max-w-[380px] p-2 m-0 text-center"
+                  >
+                    <div> {formik.errors.text} </div>
+                  </Alert>
+                )}
+              </div>
               {file && (
                 <div className="bg-[#262626] rounded-3xl text-right overflow-hidden">
                   <Button
@@ -167,9 +241,10 @@ export function AddPost({ open, handleOpen }) {
                       className="object-cover"
                       src={image}
                       alt="previewImage"
-                    ></img>
+                    />
                   )}
-                  <input
+                  <textarea
+                    autoFocus
                     type="text"
                     name="text"
                     placeholder={`Whats on your mind ${
@@ -177,9 +252,10 @@ export function AddPost({ open, handleOpen }) {
                       userData?.name?.charAt(0).toUpperCase() +
                         userData?.name?.slice(1)
                     }`}
-                    className="outline-none rounded-b-3xl capitalize text-center w-full p-3 bg-[#262626] text-[#e8e8e8]"
+                    className="p-3 outline-none rounded-b-3xl capitalize text-left w-full bg-[#262626] text-[#e8e8e8] opacity-80"
+                    {...formik.getFieldProps("text")}
                     ref={text}
-                  ></input>
+                  ></textarea>
                 </div>
               )}
               {!file && (
@@ -214,6 +290,38 @@ export function AddPost({ open, handleOpen }) {
             </form>
           </CardBody>
         </Card>
+      </Dialog>
+
+      <Dialog
+        open={showExitConfirmation}
+        className="rounded-3xl mx-auto w-96 max-w-[90vw] bg-transparent shadow-none"
+      >
+        <CardBody className="flex flex-col justify-center items-center p-0 bg-[#262626] rounded-3xl ">
+          <div className="flex flex-col divide-y-reverse divide-y w-full  divide-gray-800 rounded-3xl pt-5">
+            <h3 className="text-lg font-semibold mb-2 text-center pt-3">
+              {" "}
+              Discard post?
+            </h3>
+            <p className="text-gray-700 text-center pb-3 ">
+              If you leave, your edits won't be saved.
+            </p>
+          </div>
+          <div className="flex flex-col divide-y w-full divide-gray-800">
+            <Button
+              onClick={handleReturn}
+              className="p-5 rounded-none bg-[#262626]"
+            >
+              Cancel
+            </Button>
+
+            <Button
+              className="text-[#ed4956] p-5 rounded-none rounded-b-3xl bg-[#262626]"
+              onClick={handleCloseModal}
+            >
+              Discard
+            </Button>
+          </div>
+        </CardBody>
       </Dialog>
     </>
   );

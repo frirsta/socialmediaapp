@@ -20,8 +20,9 @@ import { AddPost } from "../post/AddPost";
 const NavBar = () => {
   const { user, userData, signOutUser } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
 
-  const handleOpen = () => setOpen((cur) => !cur);
+  const handleClose = () => setOpen(false);
 
   console.log(user, userData);
 
@@ -82,7 +83,7 @@ const NavBar = () => {
           </ListItem>
         </List>
       </Card>
-      <AddPost open={open} handleOpen={handleOpen} />
+      <AddPost open={open} handleOpen={handleOpen} handleClose={handleClose} />
     </>
   );
 };
