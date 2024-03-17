@@ -7,13 +7,15 @@ import SignIn from "./pages/Auth/SignIn.jsx";
 import SignUp from "./pages/Auth/SignUp.jsx";
 import Reset from "./pages/Auth/Reset.jsx";
 import Profile from "./pages/profiles/Profile.jsx";
+import NavBar from "./components/navbar/Navbar.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <Context>
-        <App />
+     <NavBar />
         <Routes>
+        <Route path="/" element={<App />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/reset" element={<Reset />} />

@@ -6,7 +6,7 @@ import React, { useContext } from "react";
 function App() {
   const { user, userData } = useContext(AuthContext);
   console.log(user, userData);
-  return <div>{user && userData && <NavBar />}</div>;
+  return <div>app</div>;
 }
 
 export default App;
