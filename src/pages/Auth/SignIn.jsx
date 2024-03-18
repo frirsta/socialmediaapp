@@ -129,24 +129,6 @@ const SignIn = () => {
                   )}
                 </div>
                 <div>
-                  <Checkbox
-                    label={
-                      <Typography
-                        variant="small"
-                        color="gray"
-                        className="flex items-center"
-                      >
-                        I agree the&nbsp;
-                        <a
-                          href="#"
-                          className="font-bold transition-colors hover:text-gray-900 underline"
-                        >
-                          Terms and Conditions
-                        </a>
-                      </Typography>
-                    }
-                    containerProps={{ className: "-ml-2.5" }}
-                  />
                   <Typography
                     color="gray"
                     className="mt-8 font-bold text-sm text-right mr-3"
