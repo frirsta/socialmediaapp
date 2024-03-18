@@ -65,7 +65,6 @@ const SignUp = () => {
         await registerWithEmailAndPassword(name, email, password);
         setLoading(false);
       } catch (error) {
-        setError(error.message);
         setLoading(false);
         setDisplayError(true);
       }
