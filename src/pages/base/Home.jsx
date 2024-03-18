@@ -36,11 +36,8 @@ const Home = () => {
   const [progressBar, setProgressBar] = useState(0);
   const [posts, setPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-
 
   const friendList = userData?.friends;
- 
 
   const removeFriend = async (id, name, image) => {
     const q = query(collection(db, "users"), where("uid", "==", user?.uid));
@@ -78,12 +75,14 @@ const Home = () => {
   };
   const getPosts = async () => {
     try {
-      const querySnapshot = await getDocs(query(collection(db, "posts"), orderBy("timestamp", "desc")));
+      const querySnapshot = await getDocs(
+        query(collection(db, "posts"), orderBy("timestamp", "desc"))
+      );
       if (querySnapshot.empty) {
         console.log("No posts found");
-        return []; // Return an empty array if no posts are found
+        return [];
       }
-  
+
       const postsData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -94,10 +93,8 @@ const Home = () => {
       throw error;
     }
   };
-  
+
   useEffect(() => {
-    
-   
     const fetchPosts = async () => {
       try {
         const fetchedPosts = await getPosts();
@@ -108,7 +105,6 @@ const Home = () => {
       }
     };
     fetchPosts();
-
   }, [SUBMIT_POST, collectionRef, postsCollection]);
 
   return (
@@ -125,6 +121,8 @@ const Home = () => {
             {posts?.map((post, index) => {
               return (
                 <Post
+                  addUser={addUser}
+                  removeFriend={removeFriend}
                   key={index}
                   logo={post?.logo}
                   photoURL={post?.photoURL}
@@ -134,15 +132,16 @@ const Home = () => {
                   email={post?.email}
                   image={post?.image}
                   text={post?.text}
+                  friendList={post?.friendList}
+                  user={user}
                   timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()}
                 />
               );
             })}
           </div>
         )}
-    </div>
+      </div>
       <div ref={scrollRef}>{/* refference for later */}</div>
-
     </div>
   );
 };

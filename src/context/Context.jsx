@@ -26,6 +26,7 @@ const Context = ({ children }) => {
   const provider = new GoogleAuthProvider();
   const [user, setUser] = useState();
   const [userData, setUserData] = useState();
+  const [error, setError] = useState(null);
 
   const signInWithGoogle = async () => {
     try {
@@ -44,7 +45,7 @@ const Context = ({ children }) => {
         });
       }
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
       console.log(error.message);
     }
   };
@@ -53,7 +54,7 @@ const Context = ({ children }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
       console.log(error.message);
     }
   };
@@ -69,7 +70,7 @@ const Context = ({ children }) => {
         email: user.email,
       });
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
       console.log(error.message);
       console.log(error);
     }
@@ -80,7 +81,7 @@ const Context = ({ children }) => {
       await sendPasswordResetEmail(auth, email);
       alert("Password reset link sent!");
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
       console.log(error.message);
     }
   };
@@ -124,6 +125,7 @@ const Context = ({ children }) => {
     signOutUser: signOutUser,
     user: user,
     userData: userData,
+    error: error,
   };
 
   return (

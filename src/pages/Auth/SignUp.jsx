@@ -8,6 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardBody,
+  Alert,
 } from "@material-tailwind/react";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,9 +18,10 @@ import { useFormik } from "formik";
 import google from "../../assets/icons/google.png";
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
-  const { registerWithEmailAndPassword, signInWithGoogle } =
+  const { registerWithEmailAndPassword, signInWithGoogle, error } =
     useContext(AuthContext);
   const navigate = useNavigate();
+  const [displayError, setDisplayError] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -37,8 +39,13 @@ const SignUp = () => {
     name: "",
     email: "",
     password: "",
+    termsAndConditions: false,
   };
   const validationSchema = Yup.object({
+    termsAndConditions: Yup.boolean().oneOf(
+      [true],
+      "Accept terms and conditions"
+    ),
     name: Yup.string()
       .required("Required")
       .min("6", "Username is too short, must be at least 6 characters")
@@ -46,18 +53,26 @@ const SignUp = () => {
     email: Yup.string().email("Invalid email format").required("Required"),
     password: Yup.string()
       .required("Required")
-      .min("8", "Password is too short, must be at least 8 characters")
-      .matches(/^[a-zA-Z]+$/, "Password must be alphabetic"),
+      .min("8", "Password is too short, must be at least 8 characters"),
   });
-  const handleSubmit = (event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const { name, email, password } = formik.values;
-    if (formik.isValid === true) {
-      registerWithEmailAndPassword(name, email, password);
-      setLoading(true);
+    const { name, email, password, termsAndConditions } = formik.values;
+    if (formik.isValid && termsAndConditions === true) {
+      try {
+        setLoading(true);
+        await registerWithEmailAndPassword(name, email, password);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+        setDisplayError(true);
+      }
+    } else if (!termsAndConditions) {
+      setDisplayError(true);
     } else {
-      setLoading(false);
-      alert("Please fill in all fields");
+      setDisplayError(true);
     }
   };
   const formik = useFormik({ initialValues, validationSchema, handleSubmit });
@@ -111,10 +126,10 @@ const SignUp = () => {
                       {...formik.getFieldProps("name")}
                     />
                     <div>
-                      {formik.touched.email && formik.errors.email && (
-                        <Typography color="red" className="text-sm">
-                          {formik.errors.email}
-                        </Typography>
+                      {displayError && formik.errors.name && (
+                        <Alert color="red" className="text-sm">
+                          {formik.errors.name}
+                        </Alert>
                       )}
                     </div>
                     <Typography
@@ -136,10 +151,10 @@ const SignUp = () => {
                       {...formik.getFieldProps("email")}
                     />
                     <div>
-                      {formik.touched.email && formik.errors.email && (
-                        <Typography color="red" className="text-sm">
+                      {displayError && formik.errors.email && (
+                        <Alert color="red" className="text-sm">
                           {formik.errors.email}
-                        </Typography>
+                        </Alert>
                       )}
                     </div>
                     <Typography
@@ -162,14 +177,16 @@ const SignUp = () => {
                     />
                   </div>
                   <div>
-                    {formik.errors.password && formik.touched.password && (
-                      <Typography color="red" className="text-sm">
+                    {formik.errors.password && displayError && (
+                      <Alert color="red" className="text-sm">
                         {formik.errors.password}
-                      </Typography>
+                      </Alert>
                     )}
                   </div>
                   <div>
                     <Checkbox
+                      checked={formik.values.termsAndConditions}
+                      name="termsAndConditions"
                       label={
                         <Typography
                           variant="small"
@@ -186,7 +203,15 @@ const SignUp = () => {
                         </Typography>
                       }
                       containerProps={{ className: "-ml-2.5" }}
+                      {...formik.getFieldProps("termsAndConditions")}
                     />
+                  </div>
+                  <div>
+                    {displayError && formik.errors.termsAndConditions && (
+                      <Alert color="red" className="text-sm">
+                        {formik.errors.termsAndConditions}
+                      </Alert>
+                    )}
                   </div>
                   <Button
                     size="lg"
@@ -194,7 +219,7 @@ const SignUp = () => {
                     className="flex justify-center items-center gap-3 mt-4"
                     fullWidth
                   >
-                    Sign in
+                    Sign up
                   </Button>
                   <Button
                     size="lg"
@@ -209,6 +234,11 @@ const SignUp = () => {
                     Sign up with google
                   </Button>
                 </form>
+                {error && (
+                  <Alert color="red" className="text-sm">
+                    {error}
+                  </Alert>
+                )}
               </CardBody>
               <CardFooter className="pt-0">
                 <Typography

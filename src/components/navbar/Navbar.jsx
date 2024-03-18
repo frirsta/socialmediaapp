@@ -37,23 +37,26 @@ const NavBar = () => {
               </Typography>
             </div>
             <List>
-              <ListItem className="py-[12px] px-0">
-                <ListItemPrefix className="m-0 mr-0 md:mr-4">
-                  <img src={home} className="h-5 w-5" />
-                </ListItemPrefix>
-                <Typography className="font-bold hidden md:block">
-                  Home
-                </Typography>
-              </ListItem>
-              <ListItem className="py-[12px] px-0">
-                <ListItemPrefix className="m-0 mr-0 md:mr-4">
-                  <img src={search} className="h-5 w-5" />
-                </ListItemPrefix>
-                <Typography className="font-bold hidden md:block">
-                  Search
-                </Typography>
-              </ListItem>
-
+              <Link to="/">
+                <ListItem className="py-[12px] px-0">
+                  <ListItemPrefix className="m-0 mr-0 md:mr-4">
+                    <img src={home} className="h-5 w-5" />
+                  </ListItemPrefix>
+                  <Typography className="font-bold hidden md:block">
+                    Home
+                  </Typography>
+                </ListItem>
+              </Link>
+              <Link to="/explore">
+                <ListItem className="py-[12px] px-0">
+                  <ListItemPrefix className="m-0 mr-0 md:mr-4">
+                    <img src={search} className="h-5 w-5" />
+                  </ListItemPrefix>
+                  <Typography className="font-bold hidden md:block">
+                    Explore
+                  </Typography>
+                </ListItem>
+              </Link>
               <ListItem className="py-[12px] px-0" onClick={handleOpen}>
                 <ListItemPrefix className="m-0 mr-0 md:mr-4">
                   <svg
