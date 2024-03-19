@@ -48,7 +48,7 @@ const SignUp = () => {
     ),
     name: Yup.string()
       .required("Required")
-      .min("6", "Username is too short, must be at least 6 characters")
+      .min("3", "Username is too short, must be at least 6 characters")
       .matches(/^[a-zA-Z]+$/, "Username must be alphabetic"),
     email: Yup.string().email("Invalid email format").required("Required"),
     password: Yup.string()
