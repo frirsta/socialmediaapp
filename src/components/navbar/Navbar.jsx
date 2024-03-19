@@ -24,8 +24,6 @@ const NavBar = () => {
 
   const handleClose = () => setOpen(false);
 
-  console.log(user, userData);
-
   return (
     <>
       {user && userData && (

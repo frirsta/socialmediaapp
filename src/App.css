@@ -2,5 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 #root {
-    display: flex;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }

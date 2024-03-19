@@ -91,7 +91,7 @@ const SignUp = () => {
             >
               <CardHeader
                 shadow={false}
-                className="mb-4 grid h-28 place-items-center"
+                className="mb-0 grid sm:mb-4 h-28 place-items-center"
               >
                 <Typography variant="h3" color="blue-gray">
                   Sign Up
@@ -100,12 +100,12 @@ const SignUp = () => {
                   Welcome! Enter your details to register.
                 </Typography>
               </CardHeader>
-              <CardBody className="flex flex-col justify-center items-center gap-3">
+              <CardBody className="flex flex-col justify-center items-center gap-3 sm:pt-6 sm:pb-6 pt-0 pb-0">
                 <form
                   onSubmit={handleSubmit}
-                  className=" mb-2 w-70 max-w-screen-lg sm:w-96"
+                  className=" mb-0 w-70 max-w-screen-lg sm:w-96 sm:mb-2"
                 >
-                  <div className="mb-1 flex flex-col gap-4">
+                  <div className="mb-0 flex flex-col gap-4 sm:mb-1">
                     <Typography
                       variant="h6"
                       color="blue-gray"
@@ -215,7 +215,7 @@ const SignUp = () => {
                   <Button
                     size="lg"
                     type="submit"
-                    className="flex justify-center items-center gap-3 mt-4"
+                    className="flex justify-center items-center gap-3 mt-3 sm:mt-4"
                     fullWidth
                   >
                     Sign up
@@ -223,11 +223,11 @@ const SignUp = () => {
                   <Button
                     size="lg"
                     color="white"
-                    className="flex justify-center items-center gap-3 mt-4"
+                    className="flex justify-center items-center gap-3 mt-3 sm:mt-4"
                     onClick={signInWithGoogle}
                     fullWidth
                   >
-                    <div className="h-5 w-5">
+                    <div className="h-3 w-3 sm:h-5 sm:w-5">
                       <img src={google} alt="google" />
                     </div>
                     Sign up with google

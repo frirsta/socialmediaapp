@@ -79,8 +79,8 @@ const Home = () => {
         query(collection(db, "posts"), orderBy("timestamp", "desc"))
       );
       if (querySnapshot.empty) {
-        console.log("No posts found");
-        return []; // Return an empty array if no posts are found
+        // console.log("No posts found");
+        return [];
       }
 
       const postsData = querySnapshot.docs.map((doc) => ({
