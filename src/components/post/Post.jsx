@@ -6,15 +6,17 @@ import {
   CardHeader,
   Typography,
 } from "@material-tailwind/react";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import UserAvatar from "../profile/UserAvatar";
 import PostMenu from "./PostMenu";
 import { AuthContext } from "../../context/Context";
-import { deleteDoc, doc } from "firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import LikeButton from "./postButtons/LikeButton";
 import BookmarkButton from "./postButtons/BookmarkButton";
 import ShareButton from "./postButtons/ShareButton";
+import LikedBy from "./LikedBy";
+import { Reducer, postActions, postState } from "../../context/Reducer";
 
 const Post = ({
   id,
@@ -29,10 +31,12 @@ const Post = ({
   friendList,
   addUser,
   removeFriend,
-  state,
 }) => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const postDocument = doc(db, "posts", id);
+  const [state, dispatch] = useReducer(Reducer, postState);
+  const { ADD_LIKE, HANDLE_ERROR, ADD_BOOKMARK } = postActions;
+
   const deletePost = async (e) => {
     e.preventDefault();
     try {
@@ -46,6 +50,40 @@ const Post = ({
       console.log(err);
     }
   };
+  const getBookmarks = async () => {
+    try {
+      const bookmarksQuery = collection(db, "posts", id, "bookmarks");
+      await onSnapshot(bookmarksQuery, (doc) => {
+        dispatch({
+          type: ADD_BOOKMARK,
+          bookmarks: doc.docs.map((item) => item.data()),
+        });
+      });
+    } catch (err) {
+      dispatch({ type: HANDLE_ERROR });
+      alert(err.message);
+    }
+  };
+
+  const getLikes = async () => {
+    try {
+      const likesQuery = collection(db, "posts", id, "likes");
+      await onSnapshot(likesQuery, (doc) => {
+        dispatch({
+          type: ADD_LIKE,
+          likes: doc.docs.map((item) => item.data()),
+        });
+      });
+    } catch (err) {
+      dispatch({ type: HANDLE_ERROR });
+      alert(err.message);
+    }
+  };
+
+  useEffect(() => {
+    getBookmarks();
+    getLikes();
+  }, [id, ADD_LIKE, HANDLE_ERROR, user?.uid, ADD_BOOKMARK]);
   return (
     <div className="bg-gray-100 p-4">
       <Card className="bg-white border rounded-sm max-w-md">
@@ -93,13 +131,13 @@ const Post = ({
             </div>
             <div>
               {" "}
-              <BookmarkButton id={id} />{" "}
+              <BookmarkButton id={id} />
             </div>
           </div>
           <div className="ml-3 flex justify-start items-baseline">
-            {/* {state?.likes && <DisplayUserImages users={state.likes} />} */}
+            {state?.likes && <LikedBy users={state?.likes} />}
             <Typography className="mt-3 ml-1">
-              {state?.likes.length > 0 && state?.likes.length}
+              {state?.likes?.length > 0 && state?.likes.length}
             </Typography>
           </div>
           <hr className="my-3 border-blue-gray-50 w-100" />
