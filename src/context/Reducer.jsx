@@ -3,6 +3,7 @@ export const postActions = {
   HANDLE_ERROR: "HANDLE_ERROR",
   ADD_LIKE: "ADD_LIKE",
   ADD_COMMENT: "ADD_COMMENT",
+  ADD_BOOKMARK: "ADD_BOOKMARK",
 };
 
 export const postState = {
@@ -10,6 +11,7 @@ export const postState = {
   posts: [],
   comments: [],
   likes: [],
+  bookmarks: [],
 };
 
 export const Reducer = (state, action) => {
@@ -31,6 +33,12 @@ export const Reducer = (state, action) => {
         ...state,
         error: false,
         likes: action.likes,
+      };
+    case postActions.ADD_BOOKMARK:
+      return {
+        ...state,
+        error: false,
+        bookmarks: action.bookmarks,
       };
     case postActions.ADD_COMMENT:
       return {

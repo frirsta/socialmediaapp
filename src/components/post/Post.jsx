@@ -12,6 +12,9 @@ import PostMenu from "./PostMenu";
 import { AuthContext } from "../../context/Context";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
+import LikeButton from "./postButtons/LikeButton";
+import BookmarkButton from "./postButtons/BookmarkButton";
+import ShareButton from "./postButtons/ShareButton";
 
 const Post = ({
   id,
@@ -26,6 +29,7 @@ const Post = ({
   friendList,
   addUser,
   removeFriend,
+  state,
 }) => {
   const { user, setUser } = useContext(AuthContext);
   const postDocument = doc(db, "posts", id);
@@ -80,23 +84,26 @@ const Post = ({
           </div>
         </CardHeader>
         <img src={image} alt={text} className="h-full w-full object-cover" />
-        {/* <CardBody className="w-100 p-3 pb-0">
+        <CardBody className="w-100 p-3 pb-0">
           <div className="flex justify-between">
             <div className="flex flex-row justify-start">
-               <LikeButton id={id} />
-              <CommentButton openModal={openModal} />
-              <ShareButton /> 
+              <LikeButton id={id} />
+              {/* <CommentButton openModal={openModal} /> */}
+              <ShareButton />
             </div>
-            <div> <BookmarkButton /> </div>
+            <div>
+              {" "}
+              <BookmarkButton id={id} />{" "}
+            </div>
           </div>
-           <div className="ml-3 flex justify-start items-baseline">
-            {state?.likes && <DisplayUserImages users={state.likes} />}
+          <div className="ml-3 flex justify-start items-baseline">
+            {/* {state?.likes && <DisplayUserImages users={state.likes} />} */}
             <Typography className="mt-3 ml-1">
               {state?.likes.length > 0 && state?.likes.length}
             </Typography>
-          </div> 
+          </div>
           <hr className="my-3 border-blue-gray-50 w-100" />
-        </CardBody> */}
+        </CardBody>
 
         <CardFooter className="flex flex-col justify-between pt-0">
           <div>Footer</div> {/* <CommentSection postId={id} number={2} />  */}
