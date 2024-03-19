@@ -36,18 +36,8 @@ const Home = () => {
   const [progressBar, setProgressBar] = useState(0);
   const [posts, setPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleModal = () => {};
 
-  const friendList = userData?.friends;
-
-  const removeFriend = async (id, name, image) => {
-    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
-    const getDoc = await getDocs(q);
-    const userDocumentId = getDoc.docs[0].id;
-
-    await updateDoc(doc(db, "users", userDocumentId), {
-      friends: arrayRemove({ id: id, name: name, image: image }),
-    });
-  };
   const addUser = async () => {
     try {
       const userQuery = query(
@@ -79,8 +69,8 @@ const Home = () => {
         query(collection(db, "posts"), orderBy("timestamp", "desc"))
       );
       if (querySnapshot.empty) {
-        // console.log("No posts found");
-        return [];
+        console.log("No posts found");
+        return []; // Return an empty array if no posts are found
       }
 
       const postsData = querySnapshot.docs.map((doc) => ({
@@ -118,24 +108,23 @@ const Home = () => {
           </div>
         ) : (
           <div>
-            {posts?.map((post, index) => {
+            {posts?.map((post) => {
               return (
-                <Post
-                  addUser={addUser}
-                  removeFriend={removeFriend}
-                  key={index}
-                  logo={post?.logo}
-                  photoURL={post?.photoURL}
-                  id={post?.documentId}
-                  uid={post?.uid}
-                  name={post?.name}
-                  email={post?.email}
-                  image={post?.image}
-                  text={post?.text}
-                  friendList={post?.friendList}
-                  user={user}
-                  timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()}
-                />
+                <div key={post.documentId}>
+                  <Post
+                    logo={post?.logo}
+                    photoURL={post?.photoURL}
+                    id={post?.documentId}
+                    uid={post?.uid}
+                    name={post?.name}
+                    email={post?.email}
+                    image={post?.image}
+                    text={post?.text}
+                    timestamp={new Date(
+                      post?.timestamp?.toDate()
+                    )?.toUTCString()}
+                  />
+                </div>
               );
             })}
           </div>
