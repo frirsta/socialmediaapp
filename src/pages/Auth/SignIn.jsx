@@ -38,10 +38,7 @@ const SignIn = () => {
   };
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email format").required("Required"),
-    password: Yup.string()
-      .required("Required")
-      .min("6", "Password is too short, must be at least 6 characters")
-      .matches(/^[a-zA-Z]+$/, "Password must be alphabetic"),
+    password: Yup.string().required("Required"),
   });
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -99,6 +96,7 @@ const SignIn = () => {
                     Your Email
                   </Typography>
                   <Input
+                    autoComplete="email"
                     name="email"
                     type="email"
                     size="lg"
@@ -120,6 +118,7 @@ const SignIn = () => {
                     Password
                   </Typography>
                   <Input
+                    autoComplete="current-password"
                     name="password"
                     type="password"
                     size="lg"
