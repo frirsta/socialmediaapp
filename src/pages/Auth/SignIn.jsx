@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
+  Alert,
   Button,
   CardBody,
   CardFooter,
@@ -14,7 +15,7 @@ import { auth, onAuthStateChanged } from "../../firebase/firebase";
 import google from "../../assets/icons/google.png";
 const SignIn = () => {
   const [loading, setLoading] = useState(false);
-  const { signInWithGoogle, loginWithEmailAndPassword } =
+  const { signInWithGoogle, loginWithEmailAndPassword, error } =
     useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -42,18 +43,22 @@ const SignIn = () => {
       .min("6", "Password is too short, must be at least 6 characters")
       .matches(/^[a-zA-Z]+$/, "Password must be alphabetic"),
   });
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const { email, password } = formik.values;
     if (formik.isValid === true) {
-      loginWithEmailAndPassword(email, password);
-      setLoading(true);
+      try {
+        setLoading(true);
+        await loginWithEmailAndPassword(email, password);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
     } else {
       setLoading(false);
-      alert("Please fill in all fields");
     }
-    console.log(formik.values);
   };
+
   const formik = useFormik({ initialValues, validationSchema, handleSubmit });
   return (
     <>
@@ -68,6 +73,11 @@ const SignIn = () => {
             shadow={false}
             className="w-100 flex flex-col justify-center ite"
           >
+            {error && (
+              <Alert color="red" className="text-sm z-50">
+                {error}
+              </Alert>
+            )}
             <CardHeader
               shadow={false}
               className="mb-4 grid h-28 place-items-center"
@@ -101,9 +111,9 @@ const SignIn = () => {
                   />
                   <div>
                     {formik.touched.email && formik.errors.email && (
-                      <Typography color="red" className="text-sm">
+                      <Alert color="red" className="text-sm">
                         {formik.errors.email}
-                      </Typography>
+                      </Alert>
                     )}
                   </div>
                   <Typography variant="h6" color="blue-gray" className="-mb-3">
@@ -123,9 +133,9 @@ const SignIn = () => {
                 </div>
                 <div>
                   {formik.errors.password && formik.touched.password && (
-                    <Typography color="red" className="text-sm">
+                    <Alert color="red" className="text-sm">
                       {formik.errors.password}
-                    </Typography>
+                    </Alert>
                   )}
                 </div>
                 <div>

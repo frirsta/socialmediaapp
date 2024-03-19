@@ -17,6 +17,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { getFirebaseErrorMessage } from "../utils/ErrorMessages";
 
 export const AuthContext = createContext();
 
@@ -45,7 +46,7 @@ const Context = ({ children }) => {
         });
       }
     } catch (error) {
-      setError(error.message);
+      setError(getFirebaseErrorMessage(error.code));
       console.log(error.message);
     }
   };
@@ -54,7 +55,7 @@ const Context = ({ children }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      setError(error.message);
+      setError(getFirebaseErrorMessage(error.code));
       console.log(error.message);
     }
   };
@@ -70,7 +71,7 @@ const Context = ({ children }) => {
         email: user.email,
       });
     } catch (error) {
-      setError(error.message);
+      setError(getFirebaseErrorMessage(error.code));
       console.log(error.message);
       console.log(error);
     }
@@ -81,7 +82,7 @@ const Context = ({ children }) => {
       await sendPasswordResetEmail(auth, email);
       alert("Password reset link sent!");
     } catch (error) {
-      setError(error.message);
+      setError(getFirebaseErrorMessage(error.code));
       console.log(error.message);
     }
   };
