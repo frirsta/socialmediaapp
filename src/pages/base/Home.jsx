@@ -80,7 +80,7 @@ const Home = () => {
       );
       if (querySnapshot.empty) {
         console.log("No posts found");
-        return [];
+        return []; // Return an empty array if no posts are found
       }
 
       const postsData = querySnapshot.docs.map((doc) => ({

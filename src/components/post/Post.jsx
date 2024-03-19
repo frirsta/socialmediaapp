@@ -24,7 +24,6 @@ const Post = ({
   uid,
   email,
   friendList,
-
   addUser,
   removeFriend,
 }) => {
