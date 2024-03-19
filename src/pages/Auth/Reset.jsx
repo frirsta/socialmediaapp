@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import {
+  Alert,
   Button,
   Card,
   CardBody,
@@ -13,23 +14,30 @@ import { useFormik } from "formik";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 const Reset = () => {
+  const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { sendPasswordResetEmail } = useContext(AuthContext);
+  const { sendPasswordResetEmail, error } = useContext(AuthContext);
   const initialValues = { email: "" };
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email format").required("Required"),
   });
-  const handleReset = (event) => {
+  const handleReset = async (event) => {
     event.preventDefault();
     const { email } = formik.values;
     if (formik.isValid === true) {
-      sendPasswordResetEmail(email);
-      setLoading(true);
+      try {
+        setLoading(true);
+        await sendPasswordResetEmail(email);
+        setSent(true);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
     } else {
       setLoading(false);
       alert("Please fill in all fields");
     }
-    console.log(formik.values);
+    // console.log(formik.values);
   };
   const formik = useFormik({ initialValues, validationSchema });
   return (
@@ -53,14 +61,29 @@ const Reset = () => {
               >
                 Reset Password
               </Typography>
-              <Typography
-                color="gray"
-                className="mt-8 font-normal text-center mb-2 w-70 max-w-screen-lg sm:w-96"
-              >
-                Enter the email address associated with your account and we'll
-                send you a link to reset your password
-              </Typography>
+              {sent ? (
+                <Typography
+                  color="gray"
+                  className="mt-8 font-normal text-center mb-2 w-70 max-w-screen-lg sm:w-96"
+                >
+                  If a user exists with this email a password reset link will be
+                  sent to your email
+                </Typography>
+              ) : (
+                <Typography
+                  color="gray"
+                  className="mt-8 font-normal text-center mb-2 w-70 max-w-screen-lg sm:w-96"
+                >
+                  Enter the email address associated with your account and we'll
+                  send you a link to reset your password
+                </Typography>
+              )}
             </CardHeader>
+            {error && (
+              <Alert color="red" className="text-sm mt-3">
+                {error}
+              </Alert>
+            )}
 
             <CardBody className="flex flex-col justify-center gap-3">
               <div className=" mb-2 w-70 max-w-screen-lg sm:w-96">
@@ -73,9 +96,9 @@ const Reset = () => {
                 />
                 <div>
                   {formik.touched.email && formik.errors.email && (
-                    <Typography color="red" className="text-sm">
+                    <Alert color="red" className="text-sm mt-3">
                       {formik.errors.email}
-                    </Typography>
+                    </Alert>
                   )}
                 </div>
                 <Button
