@@ -11,11 +11,15 @@ import UserAvatar from "../profile/UserAvatar";
 import PostMenu from "./PostMenu";
 import { AuthContext } from "../../context/Context";
 import {
+  arrayRemove,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
   getDocs,
   onSnapshot,
+  query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
@@ -26,6 +30,8 @@ import LikedBy from "./LikedBy";
 import { Reducer, postActions, postState } from "../../context/Reducer";
 import CommentButton from "../Comments/CommentButton";
 import PostDetailsModal from "./PostDetailsModal";
+import CommentField from "../Comments/CommentField";
+import Comments from "../Comments/Comments";
 const Post = ({
   id,
   image,
@@ -148,12 +154,12 @@ const Post = ({
             ) : friendList?.length > 0 ? (
               friendList?.map(
                 (friend) =>
-                  friend.id === uid && (
+                  friend?.id === uid && (
                     <Button
                       key={friend?.id}
                       size="sm"
                       onClick={() =>
-                        removeFriend(friend.id, friend.name, friend.image)
+                        removeFriend(friend?.id, friend?.name, friend?.image)
                       }
                     >
                       Unfollow
@@ -161,7 +167,7 @@ const Post = ({
                   )
               )
             ) : (
-              <Button key={friend?.id} color="blue" size="sm" onClick={addUser}>
+              <Button color="blue" size="sm" onClick={addUser}>
                 Follow
               </Button>
             )}
@@ -180,7 +186,7 @@ const Post = ({
               <BookmarkButton id={id} />
             </div>
           </div>
-          <div className="ml-3 flex justify-start items-baseline">
+          <div className="ml-2 flex justify-start items-baseline">
             {state?.likes && <LikedBy users={state?.likes} />}
             <Typography className="mt-3 ml-1">
               {state?.likes?.length > 0 && state?.likes.length}
@@ -189,12 +195,16 @@ const Post = ({
           <hr className="my-3 border-blue-gray-50 w-100" />
         </CardBody>
 
-        <CardFooter className="flex flex-col justify-between pt-0">
-          <div>Footer</div> {/* <CommentSection postId={id} number={2} />  */}
+        <CardFooter className="flex flex-col justify-between pt-0 p-[8px]">
+          <div>
+            <Comments postId={id} number={2} />
+            <CommentField postId={id} />
+          </div>
         </CardFooter>
       </Card>
       <div>
         <PostDetailsModal
+          addUser={addUser}
           handler={handleOpenModal}
           isOpen={isModalOpen}
           id={id}
@@ -205,6 +215,8 @@ const Post = ({
           text={text}
           timestamp={timestamp}
           uid={uid}
+          likes={state?.likes}
+          bookmarks={state?.bookmarks}
         />
       </div>
     </div>

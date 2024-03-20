@@ -7,3 +7,10 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+@media screen and (max-width: 721px) {
+  #root {
+    flex-direction: column;
+    align-items: center;
+  }
+}

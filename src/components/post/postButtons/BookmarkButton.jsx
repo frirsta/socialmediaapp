@@ -15,7 +15,7 @@ import { db } from "../../../firebase/firebase";
 import { IconButton, Tooltip } from "@material-tailwind/react";
 import bookmark from "../../../assets/icons/bookmark.png";
 import bookmark_outline from "../../../assets/icons/bookmark_outline.png";
-const BookmarkButton = ({ id }) => {
+const BookmarkButton = ({ id, size }) => {
   const [saved, setSaved] = useState(false);
   const [hover, setHover] = useState(false);
   const [state, dispatch] = useReducer(Reducer, postState);
@@ -85,20 +85,28 @@ const BookmarkButton = ({ id }) => {
     <div>
       <Tooltip content={saved ? "Remove saved post" : "Save"}>
         <IconButton
-          size="lg"
+          size={size}
           variant="text"
-          className="rounded-full"
+          className="rounded-full w-[35px] h-[35px]"
           onClick={handleBookmark}
           onMouseEnter={handleHover}
           onMouseLeave={handleHover}
         >
           {saved || hover ? (
             <>
-              <img src={bookmark} alt="bookmark" />
+              <img
+                className="w-[20px] max-w-[unset]"
+                src={bookmark}
+                alt="bookmark"
+              />
             </>
           ) : (
             <>
-              <img src={bookmark_outline} alt="bookmark outlined" />
+              <img
+                className="w-[20px] max-w-[unset]"
+                src={bookmark_outline}
+                alt="bookmark outlined"
+              />
             </>
           )}
         </IconButton>

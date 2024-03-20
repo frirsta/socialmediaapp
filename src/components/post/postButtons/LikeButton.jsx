@@ -15,7 +15,7 @@ import { db } from "../../../firebase/firebase";
 import { IconButton, Tooltip } from "@material-tailwind/react";
 import heart from "../../../assets/icons/heart.png";
 import heart_outline from "../../../assets/icons/heart_outline.png";
-const LikeButton = ({ id }) => {
+const LikeButton = ({ id, size }) => {
   const [liked, setLiked] = useState(false);
   const [hover, setHover] = useState(false);
   const [state, dispatch] = useReducer(Reducer, postState);
@@ -42,12 +42,10 @@ const LikeButton = ({ id }) => {
           name: user?.displayName,
           photoURL: user?.image || user?.photoURL,
         });
-        // console.log("Post liked");
         setLiked(true);
       }
     } catch (err) {
       alert(err.message);
-      //   console.log(err);
     }
   };
   useEffect(() => {
@@ -61,7 +59,6 @@ const LikeButton = ({ id }) => {
           });
           const userLiked = doc.docs.some((item) => item.id === user?.uid);
           setLiked(userLiked);
-          //   console.log(userLiked);
         });
       } catch (err) {
         dispatch({ type: HANDLE_ERROR });
@@ -76,20 +73,24 @@ const LikeButton = ({ id }) => {
     <div>
       <Tooltip content={liked ? "Unlike" : "Like"}>
         <IconButton
-          size="lg"
+          size={size}
           variant="text"
-          className="rounded-full"
+          className="rounded-full w-[35px] h-[35px]"
           onClick={handleLike}
           onMouseEnter={handleHover}
           onMouseLeave={handleHover}
         >
           {liked || hover ? (
             <>
-              <img src={heart} alt="heart" />
+              <img className="w-[20px] max-w-[unset]" src={heart} alt="heart" />
             </>
           ) : (
             <>
-              <img src={heart_outline} alt="heart outlined" />
+              <img
+                className="w-[20px] max-w-[unset]"
+                src={heart_outline}
+                alt="heart outlined"
+              />
             </>
           )}
         </IconButton>

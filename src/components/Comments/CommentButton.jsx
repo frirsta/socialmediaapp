@@ -2,7 +2,7 @@ import { IconButton } from "@material-tailwind/react";
 import React, { useState } from "react";
 import chat from "../../assets/icons/chat.png";
 import chat_outline from "../../assets/icons/chat_outline.png";
-const CommentButton = ({ handleOpenModal }) => {
+const CommentButton = ({ handleOpenModal, size }) => {
   const [hover, setHover] = useState(false);
 
   const handleMouseEnter = () => {
@@ -15,20 +15,24 @@ const CommentButton = ({ handleOpenModal }) => {
   return (
     <div>
       <IconButton
-        size="lg"
+        size={size}
         variant="text"
-        className="rounded-full"
+        className="rounded-full  w-[35px] h-[35px]"
         onClick={handleOpenModal}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
         {hover ? (
           <>
-            <img src={chat} alt="comment" />
+            <img className="w-[20px] max-w-[unset]" src={chat} alt="comment" />
           </>
         ) : (
           <>
-            <img src={chat_outline} alt="comment outlined" />
+            <img
+              className="w-[20px] max-w-[unset]"
+              src={chat_outline}
+              alt="comment outlined"
+            />
           </>
         )}
       </IconButton>

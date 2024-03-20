@@ -3,7 +3,7 @@ import share from "../../../assets/icons/share.png";
 import share_outline from "../../../assets/icons/share_outline.png";
 import { IconButton } from "@material-tailwind/react";
 import { Tooltip } from "@material-tailwind/react";
-const ShareButton = () => {
+const ShareButton = ({ size }) => {
   const [hover, setHover] = useState(false);
   const handleHover = () => {
     setHover(!hover);
@@ -18,19 +18,23 @@ const ShareButton = () => {
       }}
     >
       <IconButton
-        size="lg"
+        size={size}
         variant="text"
-        className="rounded-full"
+        className="rounded-full w-[35px] h-[35px]"
         onMouseEnter={handleHover}
         onMouseLeave={handleHover}
       >
         {hover ? (
           <>
-            <img src={share} alt="share" />
+            <img className="w-[20px] max-w-[unset]" src={share} alt="share" />
           </>
         ) : (
           <>
-            <img src={share_outline} alt="share outlined" />
+            <img
+              className="w-[20px] max-w-[unset]"
+              src={share_outline}
+              alt="share outlined"
+            />
           </>
         )}
       </IconButton>
